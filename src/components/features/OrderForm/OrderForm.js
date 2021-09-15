@@ -9,35 +9,42 @@ import {calculateTotal} from '../../../utils/calculateTotal';
 import settings from '../../../data/settings';
 import {formatPrice} from '../../../utils/formatPrice';
 
-const sendOrder = (options, tripCost) => {
+const sendOrder = (options, tripCost, tripDetails) => {
     const totalCost = formatPrice(calculateTotal(tripCost, options));
 
     const payload = {
       ...options,
       totalCost,
+      ...tripDetails
     };
+    if (options.name !== '' && options.contact !== '') {
+      const url = settings.db.url + '/' + settings.db.endpoint.orders;
 
-    const url = settings.db.url + '/' + settings.db.endpoint.orders;
+      const fetchOptions = {
+        cache: 'no-cache',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      };
 
-    const fetchOptions = {
-      cache: 'no-cache',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    };
+      fetch(url, fetchOptions)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (parsedResponse) {
+          console.log('parsedResponse', parsedResponse);
+        });
+    } else {
+      alert('You must give name and contact');
+    }
 
-    fetch(url, fetchOptions)
-      .then(function(response){
-        return response.json();
-      }).then(function(parsedResponse){
-        console.log('parsedResponse', parsedResponse);
-      });
+
   };
 
 
-const OrderForm = ({tripCost, options, setOrderOption}) => {
+const OrderForm = ({tripCost, options, setOrderOption, tripDetails}) => {
     return (
         <Row>
             {pricing.map(opt => (
@@ -51,7 +58,7 @@ const OrderForm = ({tripCost, options, setOrderOption}) => {
                     options={options}
                 />
             </Col>
-            <Button onClick={() => sendOrder(options, tripCost)}>Order now!</Button>
+            <Button onClick={() => sendOrder(options, tripCost, tripDetails)}>Order now!</Button>
         </Row>
     );
 };
