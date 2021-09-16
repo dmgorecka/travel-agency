@@ -9,12 +9,13 @@ import {calculateTotal} from '../../../utils/calculateTotal';
 import settings from '../../../data/settings';
 import {formatPrice} from '../../../utils/formatPrice';
 
-const sendOrder = (options, tripCost) => {
+const sendOrder = (options, tripCost, tripDetails) => {
     const totalCost = formatPrice(calculateTotal(tripCost, options));
 
     const payload = {
       ...options,
       totalCost,
+      ...tripDetails,
     };
     if (options.name !== '' && options.contact !== '') {
       const url = settings.db.url + '/' + settings.db.endpoint.orders;
