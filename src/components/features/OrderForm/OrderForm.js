@@ -9,13 +9,12 @@ import {calculateTotal} from '../../../utils/calculateTotal';
 import settings from '../../../data/settings';
 import {formatPrice} from '../../../utils/formatPrice';
 
-const sendOrder = (options, tripCost, tripDetails) => {
+const sendOrder = (options, tripCost) => {
     const totalCost = formatPrice(calculateTotal(tripCost, options));
 
     const payload = {
       ...options,
       totalCost,
-      ...tripDetails
     };
     if (options.name !== '' && options.contact !== '') {
       const url = settings.db.url + '/' + settings.db.endpoint.orders;
@@ -37,7 +36,7 @@ const sendOrder = (options, tripCost, tripDetails) => {
           console.log('parsedResponse', parsedResponse);
         });
     } else {
-      alert('You must give name and contact');
+      alert('Your must give name and contact');
     }
 
 
@@ -67,6 +66,7 @@ OrderForm.propTypes = {
     tripCost: PropTypes.string,
     options: PropTypes.object,
     setOrderOption: PropTypes.func,
+    tripDetails: PropTypes.object,
 }
 
 export default OrderForm;

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
      <input
        className={styles.input}
        type='text'
-       onChange={event => setOptionValue(event.currentTarget.value)}
+       onChange={event => setOptionValue(event.currentTarget.value)} 
      />
    </div>
  );
